@@ -1,4 +1,3 @@
-const fs = require("fs");
 const IPCIDR = require("ip-cidr");
 const { execSync } = require("child_process");
 
@@ -7,49 +6,36 @@ const PATTERN = {
   Microsoft: /search\.msn\.com/,
 };
 
-const lookup = (ip, platform) => {
+const lookup = (cidr, ip, platform) => {
   try {
     const dnsStdout = execSync(`host ${ip}`, { encoding: "utf8" });
-    if (!dnsStdout) {
-      return false;
+    if (dnsStdout && PATTERN[platform].test(dnsStdout)) {
+      console.log(`[${platform}] - [${cidr}]: ${ip}`);
     }
-    if (!PATTERN[platform].test(dnsStdout)) {
-      return false;
-    }
-    let dns = dnsStdout.split("pointer")[1].trim();
-    dns = dns.substring(0, dns.length - 1);
-
-    const ipStdout = execSync(`host ${dns}`, { encoding: "utf8" });
-    if (!ipStdout) {
-      return false;
-    }
-
-    const parsedIP = ipStdout.split("address")[1].trim();
-    return parsedIP === ip;
-  } catch (err) {
-    return false;
-  }
+  } catch (err) {}
 };
 
-const platform = "Google";
-const cidrStr = "66.249.64.0/19";
+const platform = "Microsoft";
+const cidrList = [];
 
-const cidr = new IPCIDR(cidrStr);
+let all = [],
+  arr = [],
+  cidr = "";
 
-if (!cidr.isValid()) {
-  throw new Error("CIDR is invalid");
-}
+cidrList.map((cidrStr) => {
+  cidr = new IPCIDR(cidrStr);
 
-cidr.loop((ip) => {
-  console.log(`Lookup DNS [${platform}] - [${cidrStr}]: ${ip}`);
-  const isBot = lookup(ip, platform);
-  if (ip === "66.249.66.1") {
-    console.log("ALJKJLKAJDKAJDK: ", isBot);
+  if (!cidr.isValid()) {
+    throw new Error("CIDR is invalid");
   }
-  if (isBot) {
-    fs.appendFile("./log", `[${platform}] - [${cidrStr}]: ${ip}`, () => {
-      if (err) throw err;
-      console.log('The "data to append" was appended to file!');
-    });
-  }
+
+  all = cidr.toArray();
+  arr = cidr.toRange();
+  arr.push(all[5]);
+  arr.push(all[10]);
+  arr.push(all[15]);
+
+  arr.map((ip) => {
+    lookup(cidrStr, ip, platform);
+  });
 });
