@@ -1,5 +1,5 @@
-const IPCIDR = require("ip-cidr");
-const { execSync } = require("child_process");
+import { execSync } from "child_process";
+import IPCIDR from "ip-cidr";
 
 const PATTERN = {
   Google: /google(bot){0,1}\.com/,

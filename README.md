@@ -1,9 +1,68 @@
-# Split CIDR Band
+<h1 align="center">Split CIDR Band</h1>
 
-Classless Inter-Domain Routing (CIDR /ˈsaɪdər, ˈsɪ-/) is a method for allocating IP addresses and for IP routing. The Internet Engineering Task Force introduced CIDR in 1993 to replace the previous classful network addressing architecture on the Internet. Its goal was to slow the growth of routing tables on routers across the Internet, and to help slow the rapid exhaustion of IPv4 addresses.
+<p align="center">
+A Node.js tool for analyzing and classifying CIDR ranges from major tech companies using DNS lookup strategies
+</p>
 
-IP addresses are described as consisting of two groups of bits in the address: the most significant bits are the network prefix, which identifies a whole network or subnet, and the least significant set forms the host identifier, which specifies a particular interface of a host on that network. This division is used as the basis of traffic routing between IP networks and for address allocation policies.
+## Overview
 
-Whereas classful network design for IPv4 sized the network prefix as one or more 8-bit groups, resulting in the blocks of Class A, B, or C addresses, under CIDR address space is allocated to Internet service providers and end users on any address-bit boundary. In IPv6, however, the interface identifier has a fixed size of 64 bits by convention, and smaller subnets are never allocated to end users.
+Split CIDR Band is a utility tool that helps identify and classify IP ranges (CIDR blocks) from major tech companies (Facebook, Google, Amazon) into two categories:
 
-From a collection of CIDR band (Facebook, Google, Amazon), with forward and reverse DNS Lookup strategy, find which CIDR is bot and which one is cloud range.
+- Bot networks (used for web crawlers/spiders)
+- Cloud infrastructure ranges
+
+## Features
+
+- Parse and validate CIDR notation
+- Perform forward and reverse DNS lookups
+- Identify bot networks through hostname pattern matching
+- Classify cloud infrastructure ranges
+- Support for multiple platform patterns (Google, Microsoft, etc.)
+- Efficient IP range splitting and analysis
+
+## Technical Details
+
+### Prerequisites
+
+- Node.js 14.x or higher
+- npm or pnpm package manager
+
+### Dependencies
+
+- [`ip-cidr`](https://www.npmjs.com/package/ip-cidr): ^2.1.0 - IP CIDR manipulation
+
+## Installation
+
+```bash
+# Using npm
+npm install
+
+# Using pnpm
+pnpm install
+```
+
+## Usage
+
+```javascript
+import { IPCIDR } from "ip-cidr";
+
+// Example CIDR analysis
+const cidr = new IPCIDR("192.168.0.0/24");
+const ipRange = cidr.toArray();
+```
+
+## How It Works
+
+1. Takes CIDR ranges as input
+2. Performs DNS lookups (forward and reverse)
+3. Matches patterns to identify bot networks
+4. Classifies remaining ranges as cloud infrastructure
+5. Outputs results with classification
+
+## Author
+
+@DinhThienPhuc
+
+## License
+
+MIT
